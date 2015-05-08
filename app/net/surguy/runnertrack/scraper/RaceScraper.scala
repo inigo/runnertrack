@@ -40,5 +40,19 @@ object RaceScraper {
 
 }
 
+abstract class DistanceParser {
+  def parseDistance(distance: String): Distance
+}
 
-
+class GenericDistanceParser extends DistanceParser {
+  override def parseDistance(distance: String) = {
+    distance match {
+      case s if s.toUpperCase.contains("HALF") => Distances.HalfMarathon
+      case s if s.toUpperCase.contains("FINISH") => Distances.Marathon
+      case s if s.toUpperCase.contains("MILE") =>
+        Distance(distance.replaceAll("[^0-9]","").toDouble, Mile)
+      case _ =>
+        Distance(distance.replaceAll("[^0-9]","").toDouble, Km)
+    }
+  }
+}

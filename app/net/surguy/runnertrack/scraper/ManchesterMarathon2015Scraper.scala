@@ -3,9 +3,10 @@ package net.surguy.runnertrack.scraper
 import net.surguy.runnertrack.model._
 import org.openqa.selenium.{By, WebDriver}
 import scala.collection.JavaConversions._
+import RaceScraper._
 
 class ManchesterMarathon2015Scraper(val browser: WebDriver) extends RaceScraper with WebDriverTools {
-  import RaceScraper._
+  val distanceParser = new GenericDistanceParser()
 
   // Me: 513432
   val baseUrl = "http://www.chiprace.co.uk/MyResults.aspx?CId=38&RId=932&EId=1&AId=%s"
@@ -29,21 +30,10 @@ class ManchesterMarathon2015Scraper(val browser: WebDriver) extends RaceScraper 
       val distanceText = $x("td[1]", row)
       val timeText = $x("td[2]", row)
       val duration = tryParseDuration(timeText)
-      duration.map( d => Split(parseDistance(distanceText), d) )
+      duration.map( d => Split(distanceParser.parseDistance(distanceText), d) )
     }
 
     Runner(name, splits.flatten, club, startTime, finish)
-  }
-
-  private def parseDistance(distance: String): Distance = {
-    distance match {
-      case "7 km" => Distance(7D, Km)
-      case "10 Kilometres" => Distance(10D, Km)
-      case "10 Mile" => Distance(10D, Mile)
-      case "Half Marathon" => Distances.HalfMarathon
-      case "20 Mile" => Distance(20D, Mile)
-      case "Finish" => Distances.Marathon
-    }
   }
 
 }
