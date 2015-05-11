@@ -13,18 +13,32 @@ case class RichSplit(split: Split, timeOfDay: LocalTime, splitPace: Pace, paceSo
 
 case class Distance(value: Double, distanceUnit: DistanceType) {
   def toMetres = distanceUnit.toMetres(value)
+  def -(otherDistance: Distance) = {
+    val distanceInMetres = toMetres - otherDistance.toMetres
+    Distance(distanceUnit.toUnit(distanceInMetres), distanceUnit)
+  }
+}
+case object Distance {
+  val ZERO = Distance(0, Km)
 }
 
 case class Pace(seconds: Double, distanceUnit: DistanceType)
 
 abstract class DistanceType {
-  def toMetres(distance: Double): Double
+  private[model] def toMetres(distance: Double): Double
+  private[model] def toUnit(distance: Double): Double
 }
 case object Km extends DistanceType {
-  override def toMetres(distanceInKm: Double) = distanceInKm * 1000
+  private[model] override def toMetres(distanceInKm: Double) = distanceInKm * 1000
+  private[model] override def toUnit(distanceInMetres: Double) = distanceInMetres / 1000
 }
 case object Mile extends DistanceType {
-  override def toMetres(distanceInMiles: Double) = distanceInMiles * 1609.344
+  private[model] override def toMetres(distanceInMiles: Double) = distanceInMiles * 1609.344
+  private[model] override def toUnit(distanceInMetres: Double) = distanceInMetres / 1609.344
+}
+case object Metre extends DistanceType {
+  private[model] override def toMetres(distanceInMetres: Double) = distanceInMetres
+  private[model] override def toUnit(distanceInMetres: Double) = distanceInMetres
 }
 
 object Distances {
