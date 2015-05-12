@@ -18,15 +18,23 @@ class LinearFinishTimePredictor(finalDistance: Distance) extends FinishTimePredi
   }
 }
 
+/** Work out the finish time, assuming that their average page continues to change at the same rate. */
+class SplitsFinishTimePredictor(finalDistance: Distance) extends FinishTimePredictor(finalDistance) {
+  override def predictFinish(richSplits: Seq[RichSplit]): Duration = {
+    val averagePaces = richSplits.map(s => (s.split.distance.toMetres, s.splitPace.toSecondsPerMetre))
+    ???
+  }
+}
+
 class EnrichRunner(predictor: FinishTimePredictor) {
   def enrichRunner(runner: Runner, finalDistance: Distance): Option[RichRunner] = {
     runner.startTime match {
-      case Some(startTime) =>
+      case Some(startTime) if runner.splits.nonEmpty =>
         val richSplits = EnrichSplits.enrichSplits(runner.splits, startTime)
         val predictedFinish = predictor.predictFinish(richSplits)
         val predictedFinishTimeOfDay = startTime.plus(predictedFinish)
         Some(RichRunner(runner, richSplits, predictedFinish, predictedFinishTimeOfDay))
-      case None => None
+      case _ => None
     }
   }
 }

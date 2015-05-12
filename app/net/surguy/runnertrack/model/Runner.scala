@@ -19,7 +19,9 @@ case class Distance(value: Double, distanceUnit: DistanceType) {
   }
 }
 
-case class Pace(seconds: Double, distanceUnit: DistanceType)
+case class Pace(seconds: Double, distanceUnit: DistanceType) {
+  def toSecondsPerMetre = seconds / distanceUnit.toMetres(1)
+}
 
 abstract class DistanceType {
   def toMetres(distance: Double): Double
