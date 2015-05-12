@@ -1,0 +1,18 @@
+Track runners in the London Marathon (or similar events).
+
+== Setup ==
+
+This uses Activator/Play. Build, test and run with:
+
+    ./activator
+    compile
+    test
+    run
+
+== License ==
+
+Copyright (C) Inigo Surguy, 2015.
+
+This code is licensed under the Affero GPL version 3 or any later version.
+
+See the LICENSE.txt file for details.
