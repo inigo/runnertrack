@@ -16,7 +16,7 @@ object EnrichSplits {
 
       val lastTime = splits.lastOption.map(_.split.time).getOrElse(Duration.ZERO)
       val splitTime = s.time.minus(lastTime).toMillis / 1000D
-      val splitDistance = s.distance - splits.lastOption.map(_.split.distance).getOrElse(Distance.ZERO)
+      val splitDistance = s.distance - splits.lastOption.map(_.split.distance).getOrElse(Distances.Zero)
       val splitPace = Pace(splitTime / splitDistance.value, splitDistance.distanceUnit)
 
       splits ++ Seq(RichSplit(s, startTime.plus(s.time), splitPace, paceSoFar))
