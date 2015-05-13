@@ -9,7 +9,7 @@ case class RichRunner(base: Runner, richSplits: Seq[RichSplit], predictedFinish:
 case class Finish(place: Int, time: Duration)
 
 case class Split(distance: Distance, time: Duration)
-case class RichSplit(split: Split, timeOfDay: LocalTime, splitPace: Pace, paceSoFar: Pace)
+case class RichSplit(base: Split, timeOfDay: LocalTime, splitPace: Pace, paceSoFar: Pace)
 
 case class Distance(value: Double, distanceUnit: DistanceType) {
   def toMetres = distanceUnit.toMetres(value)
@@ -17,10 +17,13 @@ case class Distance(value: Double, distanceUnit: DistanceType) {
     val distanceInMetres = toMetres - otherDistance.toMetres
     Distance(distanceUnit.toUnit(distanceInMetres), distanceUnit)
   }
+
+  override def toString: String = s"$value $distanceUnit"
 }
 
 case class Pace(seconds: Double, distanceUnit: DistanceType) {
   def toSecondsPerMetre = seconds / distanceUnit.toMetres(1)
+  override def toString: String = f"${seconds.toLong / 60L}:${seconds % 60}%05.2f min/$distanceUnit"
 }
 
 abstract class DistanceType {
@@ -30,14 +33,17 @@ abstract class DistanceType {
 case object Km extends DistanceType {
   override def toMetres(distanceInKm: Double) = distanceInKm * 1000
   private[model] override def toUnit(distanceInMetres: Double) = distanceInMetres / 1000
+  override def toString: String = "km"
 }
 case object Mile extends DistanceType {
   override def toMetres(distanceInMiles: Double) = distanceInMiles * 1609.344
   private[model] override def toUnit(distanceInMetres: Double) = distanceInMetres / 1609.344
+  override def toString: String = "miles"
 }
 case object Metre extends DistanceType {
   override def toMetres(distanceInMetres: Double) = distanceInMetres
   private[model] override def toUnit(distanceInMetres: Double) = distanceInMetres
+  override def toString: String = "m"
 }
 
 object Distances {
