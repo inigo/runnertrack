@@ -12,10 +12,10 @@ object RaceController extends Controller {
   def showRunners(raceId: String, ids: String) =  Action { implicit request =>
     val race = RaceLookup.lookupId(raceId)
     val runnerIds = ids.split(",").toSeq
-    val runners = runnerIds.map( race.scraper.scrape )
+    val runners = runnerIds.map( race.scraper.tryScrape )
     val enricher = new EnrichRunner(new LinearFinishTimePredictor(race.distance))
-    val richRunners = runners.map( enricher.enrichRunner )
-    Ok(views.html.runners(race.name, richRunners.flatten))
+    val richRunners = runners.collect{ case Some(runner) =>  enricher.enrichRunner(runner) }.flatten
+    Ok(views.html.runners(race.name, richRunners))
   }
 
   def listRaces() = Action { implicit request =>

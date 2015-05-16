@@ -5,8 +5,11 @@ import net.surguy.runnertrack.model._
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.openqa.selenium.{By, SearchContext, WebDriver}
 
+import scala.util.Try
+
 abstract class RaceScraper {
   def scrape(runnerId: String): Runner
+  def tryScrape(runnerId: String): Option[Runner] = Try(scrape(runnerId)).toOption
 }
 
 trait WebDriverTools {
