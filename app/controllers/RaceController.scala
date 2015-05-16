@@ -1,7 +1,7 @@
 package controllers
 
 import net.surguy.runnertrack.enrich.{EnrichRunner, LinearFinishTimePredictor}
-import net.surguy.runnertrack.model.{Distance, Distances}
+import net.surguy.runnertrack.model.{Race, Distance, Distances}
 import net.surguy.runnertrack.scraper.{CopenhagenMarathon2014Scraper, LondonMarathon2015Scraper, ManchesterMarathon2015Scraper, RaceScraper}
 import play.api.mvc.{Action, Controller}
 
@@ -27,4 +27,4 @@ object RaceLookup {
     }
   }
 }
-case class Race(name: String, scraper: RaceScraper, distance: Distance)
+
