@@ -36,7 +36,14 @@ object RaceScraper {
   })
 
   def tryParseDuration(time: String): Option[Duration] = Try(if (time.length>2) Some(parseDuration(time)) else None).toOption.flatten
-  def parseDuration(time: String): Duration = Duration.ofSeconds(parseTime(time).toSecondOfDay)
+  def parseDuration(time: String): Duration = {
+    val timeSplits = time.split(":").toList.reverse
+    def at(n: Int) = if (timeSplits.length>n) timeSplits(n).toInt else 0
+    val seconds = at(0)
+    val minutes = at(1)
+    val hours = at(2)
+    Duration.ofSeconds(seconds + minutes*60 + hours*3600)
+  }
 
 }
 
@@ -50,9 +57,9 @@ class GenericDistanceParser extends DistanceParser {
       case s if s.toUpperCase.contains("HALF") => Distances.HalfMarathon
       case s if s.toUpperCase.contains("FINISH") => Distances.Marathon
       case s if s.toUpperCase.contains("MILE") =>
-        Distance(distance.replaceAll("[^0-9]","").toDouble, Mile)
+        Distance(distance.replaceAll("[^0-9.]","").toDouble, Mile)
       case _ =>
-        Distance(distance.replaceAll("[^0-9]","").toDouble, Km)
+        Distance(distance.replaceAll("[^0-9.]","").toDouble, Km)
     }
   }
 }
