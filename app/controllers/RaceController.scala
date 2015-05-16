@@ -5,6 +5,9 @@ import net.surguy.runnertrack.model.{Race, Distance, Distances}
 import net.surguy.runnertrack.scraper.{CopenhagenMarathon2014Scraper, LondonMarathon2015Scraper, ManchesterMarathon2015Scraper, RaceScraper}
 import play.api.mvc.{Action, Controller}
 
+/**
+ * Display results for a set of runners.
+ */
 object RaceController extends Controller {
   def showRunners(raceId: String, ids: String) =  Action { implicit request =>
     val race = RaceLookup.lookupId(raceId)
@@ -17,6 +20,9 @@ object RaceController extends Controller {
 
 }
 
+/**
+ * Convert a race name passed in to the browser to a name and associated code.
+ */
 object RaceLookup {
   def lookupId(raceId: String) = {
     val browser = RaceScraper.browser()

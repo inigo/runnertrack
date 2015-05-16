@@ -1,15 +1,9 @@
 package net.surguy.runnertrack.scraper
 
-import java.time.format.DateTimeFormatter
-import java.time.temporal.{TemporalAccessor, TemporalQuery}
-import java.time.{Duration, LocalTime}
-
 import com.gargoylesoftware.htmlunit.BrowserVersion
 import net.surguy.runnertrack.model._
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.openqa.selenium.{By, SearchContext, WebDriver}
-
-import scala.util.Try
 
 abstract class RaceScraper {
   def scrape(runnerId: String): Runner

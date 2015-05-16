@@ -1,8 +1,8 @@
 package net.surguy.runnertrack.enrich
 
-import java.time.{Duration, LocalTime}
+import java.time.Duration
 
-import net.surguy.runnertrack.model.{Distance, RichSplit, RichRunner, Runner}
+import net.surguy.runnertrack.model.{Distance, RichRunner, RichSplit, Runner}
 
 /** Work out the finish time of a runner based on their splits so far. */
 abstract class FinishTimePredictor(val finalDistance: Distance) {
