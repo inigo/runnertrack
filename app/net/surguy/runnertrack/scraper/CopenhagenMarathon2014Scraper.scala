@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.file.Files
 
 import net.surguy.runnertrack.model._
-import net.surguy.runnertrack.scraper.RaceScraper._
+import net.surguy.runnertrack.TimeUtils._
 import org.openqa.selenium.{By, WebDriver}
 
 import scala.collection.JavaConversions._

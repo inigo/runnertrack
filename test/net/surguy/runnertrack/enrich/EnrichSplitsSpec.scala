@@ -2,10 +2,9 @@ package net.surguy.runnertrack.enrich
 
 import java.time.Duration
 
-import net.surguy.runnertrack.model.{Pace, Mile, Distance, Split}
-import net.surguy.runnertrack.scraper.RaceScraper
+import net.surguy.runnertrack.TimeUtils._
+import net.surguy.runnertrack.model.{Distance, Mile, Pace, Split}
 import org.specs2.mutable.Specification
-import RaceScraper.parseTime
 
 class EnrichSplitsSpec extends Specification {
 

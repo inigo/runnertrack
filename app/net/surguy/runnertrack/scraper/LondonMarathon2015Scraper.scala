@@ -3,7 +3,7 @@ package net.surguy.runnertrack.scraper
 import net.surguy.runnertrack.model._
 import org.openqa.selenium.{By, WebDriver}
 import scala.collection.JavaConversions._
-import RaceScraper._
+import net.surguy.runnertrack.TimeUtils._
 
 class LondonMarathon2015Scraper(val browser: WebDriver) extends RaceScraper with WebDriverTools {
   val distanceParser = new GenericDistanceParser()

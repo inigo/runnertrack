@@ -1,7 +1,5 @@
 package controllers
 
-import java.time.Duration
-
 import net.surguy.runnertrack.enrich.{EnrichRunner, LinearFinishTimePredictor}
 import net.surguy.runnertrack.model.{Distance, Distances}
 import net.surguy.runnertrack.scraper.{CopenhagenMarathon2014Scraper, LondonMarathon2015Scraper, ManchesterMarathon2015Scraper, RaceScraper}
@@ -30,14 +28,3 @@ object RaceLookup {
   }
 }
 case class Race(name: String, scraper: RaceScraper, distance: Distance)
-
-object DurationFormatter {
-
-  def format(duration: Duration) = {
-    val hours = duration.toHours
-    val minutes = ((duration.getSeconds % (60 * 60)) / 60).asInstanceOf[Int]
-    val seconds = (duration.getSeconds % 60).asInstanceOf[Int]
-    f"$hours%02d:$minutes%02d:$seconds%02d"
-  }
-
-}

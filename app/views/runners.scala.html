@@ -1,3 +1,4 @@
+@import net.surguy.runnertrack.TimeUtils
 @(raceName: String, runners: Seq[net.surguy.runnertrack.model.RichRunner])
 
 @main(raceName + " - Runners") {
@@ -11,8 +12,8 @@
                     <div><label>Club</label>: @runner.base.club</div>
                     <div><label>Start time</label>: @runner.base.startTime</div>
                     <div><label>Finish place</label>: @runner.base.finish.map(_.place)</div>
-                    <div><label>Finish time</label>: @runner.base.finish.map(d => DurationFormatter.format(d.time))</div>
-                    <div><label>Predicted finish time</label>: @DurationFormatter.format(runner.predictedFinish)</div>
+                    <div><label>Finish time</label>: @runner.base.finish.map(d => TimeUtils.format(d.time))</div>
+                    <div><label>Predicted finish time</label>: @TimeUtils.format(runner.predictedFinish)</div>
                     <div><label>Predicted finish time of day</label>: @runner.predictedFinishTimeOfDay</div>
                 </div>
                 <table class="splits table">
@@ -27,7 +28,7 @@
                     @for(split <- runner.richSplits) {
                         <tr class="split">
                             <td>@split.base.distance</td>
-                            <td>@DurationFormatter.format(split.base.time)</td>
+                            <td>@TimeUtils.format(split.base.time)</td>
                             <td>@split.timeOfDay</td>
                             <td>@split.paceSoFar</td>
                             <td>@split.splitPace</td>

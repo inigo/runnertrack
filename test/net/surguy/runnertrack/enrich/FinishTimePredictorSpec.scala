@@ -2,11 +2,11 @@ package net.surguy.runnertrack.enrich
 
 import java.time.Duration
 
-import net.surguy.runnertrack.model.{Distances, Mile, Distance, Split}
-import net.surguy.runnertrack.scraper.RaceScraper._
+import net.surguy.runnertrack.TimeUtils._
+import net.surguy.runnertrack.model.{Distances, Split}
 import org.specs2.mutable.Specification
 
-class FinishTimePredictorTest extends Specification {
+class FinishTimePredictorSpec extends Specification {
 
   "predicting finish on a single value" should {
     "assume a constant pace" in {

@@ -2,10 +2,11 @@ package net.surguy.runnertrack.scraper
 
 import java.time.Duration
 
+import net.surguy.runnertrack.TimeUtils
 import org.specs2.mutable.Specification
-import RaceScraper._
+import TimeUtils._
 
-class RaceScraperSpec extends Specification {
+class TimeUtilsSpec extends Specification {
 
   "Parsing durations" should {
     "parse short durations in minutes" in { tryParseDuration("12:34") mustEqual Some(Duration.parse("PT12M34S")) }
