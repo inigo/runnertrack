@@ -1,0 +1,12 @@
+@(raceNames: Seq[(String, String)])
+
+@main("Available races") {
+
+    <h1>Races</h1>
+    <ul>
+    @for(race <- raceNames) {
+        <li><a href="/@race._1/">@race._2</a></li>
+    }
+    </ul>
+
+}
