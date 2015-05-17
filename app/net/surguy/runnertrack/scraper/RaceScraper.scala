@@ -9,7 +9,7 @@ import org.openqa.selenium.{By, SearchContext, WebDriver}
 import scala.util.Try
 
 abstract class RaceScraper {
-  def scrape(browser: WebDriver)(runnerId: String): Runner
+  private[scraper] def scrape(browser: WebDriver)(runnerId: String): Runner
   def tryScrape(browser: WebDriver)(runnerId: String): Option[Runner] = Try(scrape(browser)(runnerId)).toOption
 }
 
