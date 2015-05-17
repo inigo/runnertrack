@@ -5,17 +5,31 @@ import net.surguy.runnertrack.model.{Distances, Race}
 import net.surguy.runnertrack.scraper.{CopenhagenMarathon2014Scraper, LondonMarathon2015Scraper, ManchesterMarathon2015Scraper, RaceScraper}
 import play.api.mvc.{Action, Controller}
 
+import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+
 /**
  * Display results for a set of runners.
  */
 object RaceController extends Controller {
-  def showRunners(raceId: String, ids: String) =  Action { implicit request =>
+  // Note that this is using the Scala concurrent Duration and TimeUnit, in contrast to the rest of the code
+  // which is using the Java 8 Duration and TimeUnit
+  val MAX_WAIT = scala.concurrent.duration.Duration(10, scala.concurrent.duration.SECONDS)
+
+  def showRunners(raceId: String, ids: String) =  Action.async { implicit request =>
     val race = RaceLookup.lookupId(raceId)
-    val runnerIds = ids.split(",").toSeq
-    val runners = runnerIds.map( race.scraper.tryScrape(RaceScraper.browser()) )
     val enricher = new EnrichRunner(new LinearFinishTimePredictor(race.distance))
-    val richRunners = runners.collect{ case Some(runner) =>  enricher.enrichRunner(runner) }.flatten
-    Ok(views.html.runners(race.name, richRunners))
+
+    val runnerIds = ids.split(",").toSeq
+    val runnerFutures = for (r <- runnerIds) yield {
+      Future {
+        val runner = race.scraper.tryScrape(RaceScraper.browser())(r)
+        val result = runner.map( enricher.enrichRunner ).flatten
+        result
+      }
+    }
+    val resolvedFutures = Future { runnerFutures.map( r => Await.result(r, MAX_WAIT) ) }
+    resolvedFutures.map( richRunners => Ok(views.html.runners(race.name, richRunners.flatten)))
   }
 
   def listRaces() = Action { implicit request =>
