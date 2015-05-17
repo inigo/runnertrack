@@ -2,7 +2,7 @@ package controllers
 
 import net.surguy.runnertrack.enrich.{EnrichRunner, LinearFinishTimePredictor}
 import net.surguy.runnertrack.model.{Distances, Race}
-import net.surguy.runnertrack.scraper.{CopenhagenMarathon2014Scraper, LondonMarathon2015Scraper, ManchesterMarathon2015Scraper, RaceScraper}
+import net.surguy.runnertrack.scraper._
 import play.api.mvc.{Action, Controller}
 
 import scala.concurrent.{Await, Future}
@@ -53,7 +53,9 @@ object RaceLookup {
     "manchester2015" -> Race("Greater Manchester Marathon 2015", new ManchesterMarathon2015Scraper(), Distances.Marathon)
     , "london2015" -> Race("London Marathon 2015", new LondonMarathon2015Scraper(), Distances.Marathon)
     , "copenhagen2014" -> Race("Copenhagen 2014", new CopenhagenMarathon2014Scraper(), Distances.Marathon)
-  )
+  ).map((kv: (String, Race)) => (kv._1, wrapWithCache(kv._2)) )
+
+  private def wrapWithCache(r: Race) = r.copy(scraper = new CachingScraper(r.scraper))
 
   def lookupId(raceId: String): Race = races(raceId)
   def raceNames: Seq[(String, String)] = races.map((tuple: (String, Race)) => (tuple._1, tuple._2.name) ).toSeq
