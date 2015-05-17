@@ -12,7 +12,7 @@ object RaceController extends Controller {
   def showRunners(raceId: String, ids: String) =  Action { implicit request =>
     val race = RaceLookup.lookupId(raceId)
     val runnerIds = ids.split(",").toSeq
-    val runners = runnerIds.map( race.scraper.tryScrape )
+    val runners = runnerIds.map( race.scraper.tryScrape(RaceScraper.browser()) )
     val enricher = new EnrichRunner(new LinearFinishTimePredictor(race.distance))
     val richRunners = runners.collect{ case Some(runner) =>  enricher.enrichRunner(runner) }.flatten
     Ok(views.html.runners(race.name, richRunners))
@@ -36,9 +36,9 @@ object RaceLookup {
   val browser = RaceScraper.browser()
 
   private val races = Map(
-    "manchester2015" -> Race("Greater Manchester Marathon 2015", new ManchesterMarathon2015Scraper(browser), Distances.Marathon)
-    , "london2015" -> Race("London Marathon 2015", new LondonMarathon2015Scraper(browser), Distances.Marathon)
-    , "copenhagen2014" -> Race("Copenhagen 2014", new CopenhagenMarathon2014Scraper(browser), Distances.Marathon)
+    "manchester2015" -> Race("Greater Manchester Marathon 2015", new ManchesterMarathon2015Scraper(), Distances.Marathon)
+    , "london2015" -> Race("London Marathon 2015", new LondonMarathon2015Scraper(), Distances.Marathon)
+    , "copenhagen2014" -> Race("Copenhagen 2014", new CopenhagenMarathon2014Scraper(), Distances.Marathon)
   )
 
   def lookupId(raceId: String): Race = races(raceId)

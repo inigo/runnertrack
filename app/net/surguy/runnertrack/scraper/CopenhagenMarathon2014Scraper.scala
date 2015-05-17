@@ -9,13 +9,13 @@ import org.openqa.selenium.{By, WebDriver}
 
 import scala.collection.JavaConversions._
 
-class CopenhagenMarathon2014Scraper(val browser: WebDriver) extends RaceScraper with WebDriverTools {
+class CopenhagenMarathon2014Scraper extends RaceScraper with WebDriverTools {
   val distanceParser = new GenericDistanceParser()
 
   // Julius Kiprono Mutai: 1
   val baseUrl = "http://live.ultimate.dk/desktop/front/data.php?eventid=2186&mode=participantinfo&language=us&pid=%s"
 
-  override def scrape(runnerId: String) = {
+  override def scrape(browser: WebDriver)(runnerId: String) = {
     browser.navigate().to(baseUrl.format(runnerId))
 
     // The page content is a JavaScript fragment, containing the HTML within a
@@ -27,7 +27,7 @@ class CopenhagenMarathon2014Scraper(val browser: WebDriver) extends RaceScraper 
     Files.write(f.toPath, html.getBytes)
     try {
       browser.navigate().to(f.toURI.toURL)
-      parse
+      parse(browser)
     } finally {
       f.delete()
     }
@@ -39,7 +39,7 @@ class CopenhagenMarathon2014Scraper(val browser: WebDriver) extends RaceScraper 
     source.substring(sourceStart, sourceEnd)
   }
 
-  def parse: Runner = {
+  def parse(implicit browser: WebDriver): Runner = {
     val name = $x("(//table[@class='participant_table_data']//span[@class='participant_value_big'])[1]")
     val club = ""
 

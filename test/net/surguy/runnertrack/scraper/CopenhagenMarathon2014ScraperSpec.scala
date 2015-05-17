@@ -9,14 +9,14 @@ import org.specs2.mutable.Specification
 
 class CopenhagenMarathon2014ScraperSpec extends Specification {
 
-  val scraper = new CopenhagenMarathon2014Scraper(RaceScraper.browser())
+  val scraper = new CopenhagenMarathon2014Scraper()
 
   def parse(fileName: String): Runner = {
     val localUrl = new File("test/resources/"+fileName).toURI.toURL
     val browser = RaceScraper.browser()
-    val scraper = new CopenhagenMarathon2014Scraper(browser)
+    val scraper = new CopenhagenMarathon2014Scraper()
     browser.navigate().to(localUrl)
-    scraper.parse
+    scraper.parse(browser)
   }
 
   "Extracting the HTML from a JS file" should {

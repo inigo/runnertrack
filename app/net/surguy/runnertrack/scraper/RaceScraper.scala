@@ -1,6 +1,7 @@
 package net.surguy.runnertrack.scraper
 
 import com.gargoylesoftware.htmlunit.BrowserVersion
+import com.gargoylesoftware.htmlunit.javascript.configuration.WebBrowser
 import net.surguy.runnertrack.model._
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.openqa.selenium.{By, SearchContext, WebDriver}
@@ -8,14 +9,14 @@ import org.openqa.selenium.{By, SearchContext, WebDriver}
 import scala.util.Try
 
 abstract class RaceScraper {
-  def scrape(runnerId: String): Runner
-  def tryScrape(runnerId: String): Option[Runner] = Try(scrape(runnerId)).toOption
+  def scrape(browser: WebDriver)(runnerId: String): Runner
+  def tryScrape(browser: WebDriver)(runnerId: String): Option[Runner] = Try(scrape(browser)(runnerId)).toOption
 }
 
 trait WebDriverTools {
-  val browser: WebDriver
-  def $(cssSelector: String, el: SearchContext = browser) = el.findElement(By.cssSelector(cssSelector)).getText.trim
-  def $x(xpath: String, el: SearchContext = browser) = el.findElement(By.xpath(xpath)).getText.trim
+  def $(cssSelector: String, el: SearchContext = null)(implicit browser: WebDriver) = nonNullOf(el, browser).findElement(By.cssSelector(cssSelector)).getText.trim
+  def $x(xpath: String, el: SearchContext = null)(implicit browser: WebDriver) = nonNullOf(el, browser).findElement(By.xpath(xpath)).getText.trim
+  private def nonNullOf(a: SearchContext, b:SearchContext): SearchContext = if (a!=null) a else b
 }
 
 object RaceScraper {

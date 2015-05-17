@@ -5,18 +5,18 @@ import org.openqa.selenium.{By, WebDriver}
 import scala.collection.JavaConversions._
 import net.surguy.runnertrack.TimeUtils._
 
-class ManchesterMarathon2015Scraper(val browser: WebDriver) extends RaceScraper with WebDriverTools {
+class ManchesterMarathon2015Scraper extends RaceScraper with WebDriverTools {
   val distanceParser = new GenericDistanceParser()
 
   // Me: 513432
   val baseUrl = "http://www.chiprace.co.uk/MyResults.aspx?CId=38&RId=932&EId=1&AId=%s"
 
-  override def scrape(runnerId: String) = {
+  override def scrape(browser: WebDriver)(runnerId: String) = {
     browser.navigate().to(baseUrl.format(runnerId))
-    parse
+    parse(browser)
   }
 
-  def parse: Runner = {
+  def parse(implicit browser: WebDriver): Runner = {
     val name = $("#ctl00_Content_Main_lblName")
     val club = $x("//*[@id='ctl00_Content_Main_grdBio']//tr[5]/td[2]")
     val startTime = tryParseTime("10:00:00")

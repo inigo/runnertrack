@@ -18,8 +18,11 @@ class IntegrationSpec extends Specification {
 
   "The results page" should {
     "show runners names" in new WithBrowser {
-      browser.goTo("http://localhost:" + port+"/manchester2015/513432")
-      browser.pageSource.toLowerCase must contain("Inigo Surguy".toLowerCase)
+      browser.goTo("http://localhost:" + port+"/manchester2015/513432,26148")
+      val source = browser.pageSource.toLowerCase
+      source must contain("Inigo Surguy".toLowerCase)
+      source must contain("Paul Martelletti".toLowerCase)
     }
   }
+
 }
