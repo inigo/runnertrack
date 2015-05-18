@@ -28,7 +28,7 @@ case class Distance(value: Double, distanceUnit: DistanceType) {
 
 case class Pace(seconds: Double, distanceUnit: DistanceType) {
   def toSecondsPerMetre = seconds / distanceUnit.toMetres(1)
-  override def toString: String = f"${seconds.toLong / 60L}:${seconds % 60}%05.2f min/$distanceUnit"
+  override def toString: String = f"${seconds.toLong / 60L}:${seconds % 60}%02.0f min/$distanceUnit"
 }
 
 abstract class DistanceType {
