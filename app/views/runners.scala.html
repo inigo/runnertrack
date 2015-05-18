@@ -6,22 +6,22 @@
     <h1>@raceName runners</h1>
     <div class="runners">
         @for( runner <- runners){
-            <div class="runner">
-                <h2>@runner.base.name</h2>
+            <div class="runner col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <h2 class="runnerName">@runner.base.name</h2>
                 <div class="stats">
-                    <div><label>Club</label>: @runner.base.club</div>
-                    <div><label>Start time</label>: @runner.base.startTime</div>
-                    <div><label>Finish place</label>: @runner.base.finish.map(_.place)</div>
-                    <div><label>Finish time</label>: @runner.base.finish.map(d => TimeUtils.format(d.time))</div>
-                    <div><label>Predicted finish time</label>: @TimeUtils.format(runner.predictedFinish)</div>
-                    <div><label>Predicted finish time of day</label>: @runner.predictedFinishTimeOfDay</div>
+                    <div class="club"><label>Club</label>: @runner.base.club</div>
+                    <div class="startTime"><label>Start time</label>: @runner.base.startTime</div>
+                    <div class="finishPlace"><label>Finish place</label>: @runner.base.finish.map(_.place)</div>
+                    <div class="finishTime"><label>Finish time</label>: @runner.base.finish.map(d => TimeUtils.format(d.time))</div>
+                    <div class="predictedFinishTime"><label>Predicted finish time</label>: @TimeUtils.format(runner.predictedFinish)</div>
+                    <div class="predictedFinishTimeOfDay"><label>Predicted finish time of day</label>: @runner.predictedFinishTimeOfDay</div>
                 </div>
                 <table class="splits table">
                     <thead>
                         <tr>
                             <th>Distance</th>
                             <th>Time</th>
-                            <th>Time of day</th>
+                            <th class="visible-md-block visible-lg-block">Time of day</th>
                             <th>Pace so far</th>
                             <th>Split pace</th>
                         </tr>
@@ -31,7 +31,7 @@
                         <tr class="split">
                             <td>@split.base.distance</td>
                             <td>@TimeUtils.format(split.base.time)</td>
-                            <td>@split.timeOfDay</td>
+                            <td class="visible-md-block visible-lg-block">@split.timeOfDay</td>
                             <td>@split.paceSoFar</td>
                             <td>@split.splitPace</td>
                         </tr>

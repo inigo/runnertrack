@@ -1,0 +1,11 @@
+.runner { border: solid 1px #999; box-shadow: 10px 10px 30px; margin: 10px; }
+h2.runnerName { margin-top: 6px; background: #d0ddd0; text-align: center; padding: 2px; }
+
+/* Prevent the splits table from overflowing its box */
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+  padding: 3px !important;
+}
+
+/* Emphasise the information, not the labels */
+.stats { font-weight: bold; }
+.stats label { font-weight: normal; }
