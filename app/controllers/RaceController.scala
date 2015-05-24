@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object RaceController extends Controller {
   // Note that this is using the Scala concurrent Duration and TimeUnit, in contrast to the rest of the code
   // which is using the Java 8 Duration and TimeUnit
-  val MAX_WAIT = scala.concurrent.duration.Duration(10, scala.concurrent.duration.SECONDS)
+  val MAX_WAIT = scala.concurrent.duration.Duration(22, scala.concurrent.duration.SECONDS)
 
   def showRunners(raceId: String, ids: String) =  Action.async { implicit request =>
     val race = RaceLookup.lookupId(raceId)

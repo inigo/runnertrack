@@ -1,7 +1,8 @@
 package net.surguy.runnertrack.scraper
 
+import java.util.concurrent.TimeUnit
+
 import com.gargoylesoftware.htmlunit.BrowserVersion
-import com.gargoylesoftware.htmlunit.javascript.configuration.WebBrowser
 import net.surguy.runnertrack.model._
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.openqa.selenium.{By, SearchContext, WebDriver}
@@ -25,6 +26,8 @@ object RaceScraper {
   private def createHtmlUnitDriver(enableJavaScript: Boolean): WebDriver = {
     val driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_24)
     driver.setJavascriptEnabled(enableJavaScript)
+    driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS)
+    driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS)
     driver
   }
 
