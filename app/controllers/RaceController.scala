@@ -1,12 +1,12 @@
 package controllers
 
-import net.surguy.runnertrack.enrich.{EnrichRunner, LinearFinishTimePredictor}
+import net.surguy.runnertrack.enrich.{EnrichRunner, RegressionFinishTimePredictor}
 import net.surguy.runnertrack.model.{Distances, Race}
 import net.surguy.runnertrack.scraper._
 import play.api.mvc.{Action, Controller}
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, Future}
 
 /**
  * Display results for a set of runners.
@@ -18,7 +18,7 @@ object RaceController extends Controller {
 
   def showRunners(raceId: String, ids: String) =  Action.async { implicit request =>
     val race = RaceLookup.lookupId(raceId)
-    val enricher = new EnrichRunner(new LinearFinishTimePredictor(race.distance))
+    val enricher = new EnrichRunner(new RegressionFinishTimePredictor(race.distance))
 
     val runnerIds = ids.split(",").toSeq
     val runnerFutures = for (r <- runnerIds) yield {

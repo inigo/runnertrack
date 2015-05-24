@@ -1,8 +1,7 @@
 package net.surguy.runnertrack.enrich
 
 import java.time.Duration
-
-import net.surguy.runnertrack.model.{Distance, RichRunner, RichSplit, Runner}
+import net.surguy.runnertrack.model._
 
 /** Work out the finish time of a runner based on their splits so far. */
 abstract class FinishTimePredictor(val finalDistance: Distance) {
@@ -19,10 +18,20 @@ class LinearFinishTimePredictor(finalDistance: Distance) extends FinishTimePredi
 }
 
 /** Work out the finish time, assuming that their average page continues to change at the same rate. */
-class SplitsFinishTimePredictor(finalDistance: Distance) extends FinishTimePredictor(finalDistance) {
+class RegressionFinishTimePredictor(finalDistance: Distance) extends FinishTimePredictor(finalDistance) {
+  import org.apache.commons.math3.stat.regression.SimpleRegression
+
   override def predictFinish(richSplits: Seq[RichSplit]): Duration = {
-    val averagePaces = richSplits.map(s => (s.base.distance.toMetres, s.splitPace.toSecondsPerMetre))
-    ???
+    richSplits.length match {
+      case len if len < 3 => new LinearFinishTimePredictor(finalDistance).predictFinish(richSplits)
+      case _ =>
+        val data = richSplits.map( d => (d.base.distance.toMetres, d.paceSoFar.toSecondsPerMetre ))
+        val regression = new SimpleRegression()
+        data.foreach( d => regression.addData(d._1, d._2) )
+        val avgPaceAtFinishMetresPerSecond = regression.predict(Distances.Marathon.toMetres)
+        val finishTimeSeconds = avgPaceAtFinishMetresPerSecond * Distances.Marathon.toMetres
+        Duration.ofSeconds(finishTimeSeconds.toLong)
+    }
   }
 }
 
