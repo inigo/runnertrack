@@ -11,10 +11,13 @@
                 <div class="stats">
                     <div class="club"><label>Club</label>: @runner.base.club</div>
                     <div class="startTime"><label>Start time</label>: @runner.base.startTime</div>
-                    <div class="finishPlace"><label>Finish place</label>: @runner.base.finish.map(_.place)</div>
-                    <div class="finishTime"><label>Finish time</label>: @runner.base.finish.map(d => TimeUtils.format(d.time))</div>
-                    <div class="predictedFinishTime"><label>Predicted finish time</label>: @TimeUtils.format(runner.predictedFinish)</div>
-                    <div class="predictedFinishTimeOfDay"><label>Predicted finish time of day</label>: @runner.predictedFinishTimeOfDay</div>
+                    @if(runner.base.finish.isDefined) {
+                        <div class="finishPlace"><label>Finish place</label>: @runner.base.finish.map(_.place)</div>
+                        <div class="finishTime"><label>Finish time</label>: @runner.base.finish.map(d => TimeUtils.format(d.time))</div>
+                    } else {
+                        <div class="predictedFinishTime"><label>Predicted finish time</label>: @TimeUtils.format(runner.predictedFinish)</div>
+                        <div class="predictedFinishTimeOfDay"><label>Predicted finish time of day</label>: @runner.predictedFinishTimeOfDay</div>
+                    }
                 </div>
                 <table class="splits table">
                     <thead>
