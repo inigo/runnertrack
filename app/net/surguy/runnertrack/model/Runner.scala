@@ -28,6 +28,7 @@ case class Distance(value: Double, distanceUnit: DistanceType) {
 
 case class Pace(seconds: Double, distanceUnit: DistanceType) {
   def toSecondsPerMetre = seconds / distanceUnit.toMetres(1)
+  def displayNoUnits: String = f"${seconds.toLong / 60L}:${seconds % 60}%02.0f"
   // Note the zero-width space to put in a linebreak when displayed in HTML on a small screen
   override def toString: String = f"${seconds.toLong / 60L}:${seconds % 60}%02.0f min/\u200B$distanceUnit"
 }
