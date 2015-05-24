@@ -24,7 +24,7 @@ object RaceController extends Controller {
     val runnerFutures = for (r <- runnerIds) yield {
       Future {
         val runner = race.scraper.tryScrape(RaceScraper.browser())(r)
-        val result = runner.map( enricher.enrichRunner ).flatten
+        val result = runner.flatMap(enricher.enrichRunner)
         result
       }
     }
