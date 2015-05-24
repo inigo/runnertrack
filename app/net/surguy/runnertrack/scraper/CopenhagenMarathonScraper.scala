@@ -9,11 +9,11 @@ import org.openqa.selenium.{By, WebDriver}
 
 import scala.collection.JavaConversions._
 
-class CopenhagenMarathon2014Scraper extends RaceScraper with WebDriverTools {
+class CopenhagenMarathonScraper(raceId: String) extends RaceScraper with WebDriverTools {
   val distanceParser = new GenericDistanceParser()
 
   // Julius Kiprono Mutai: 1
-  val baseUrl = "http://live.ultimate.dk/desktop/front/data.php?eventid=2186&mode=participantinfo&language=us&pid=%s"
+  val baseUrl = s"http://live.ultimate.dk/desktop/front/data.php?eventid=$raceId&mode=participantinfo&language=us&pid=%s"
 
   override def scrape(browser: WebDriver)(runnerId: String) = {
     browser.navigate().to(baseUrl.format(runnerId))
@@ -41,16 +41,18 @@ class CopenhagenMarathon2014Scraper extends RaceScraper with WebDriverTools {
 
   def parse(implicit browser: WebDriver): Runner = {
     val name = $x("(//table[@class='participant_table_data']//span[@class='participant_value_big'])[1]")
-    val club = ""
+    val club = $x("(//table[@class='participant_table_data'])[4]//table[1]//tr[1]//td[2]")
 
     val startTimeText = $x("(//table[@class='participant_table_data'][6])//table[1]//tr[2]//td[2]")
     val startTime = tryParseTime(startTimeText)
 
-    val finishTimeText = $x("(//table[@class='participant_table_data'][6])//table[1]//tr[3]//td[2]")
-    val finishTime = tryParseDuration(finishTimeText.split(" ").headOption.getOrElse(""))
-    val placeText = $x("((//table[@class='participant_table_data'][6])//table)[2]//tr[1]//td[2]")
-    val place = if (placeText.contains("of")) placeText.substring(0,placeText.indexOf(" ")).toInt else -1
-    val finish = finishTime.map( t => Finish(place, t))
+    val finish = if (browser.getPageSource.contains("rank overall")) {
+      val finishTimeText = $x("(//table[@class='participant_table_data'][6])//table[1]//tr[3]//td[2]")
+      val finishTime = tryParseDuration(finishTimeText.split(" ").headOption.getOrElse(""))
+      val placeText = $x("((//table[@class='participant_table_data'][6])//table)[2]//tr[1]//td[2]")
+      val place = if (placeText.contains("of")) placeText.substring(0,placeText.indexOf(" ")).toInt else -1
+      finishTime.map( t => Finish(place, t))
+    } else None
 
     val splits = for (row <- browser.findElements(By.xpath("((//table[@class='participant_table_data'][7])//table)//tr[td/@class='split_time']"))) yield {
       val distanceText = $x("td[1]", row)
@@ -62,4 +64,9 @@ class CopenhagenMarathon2014Scraper extends RaceScraper with WebDriverTools {
     Runner(name, splits.flatten, club, startTime, finish)
   }
 
+}
+
+object CopenhagenMarathonScraper {
+  val RACE_ID_2014 = "2186"
+  val RACE_ID_2015 = "2601"
 }
