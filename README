@@ -9,6 +9,22 @@ This uses Activator/Play. Build, test and run with:
     test
     run
 
+== Deploying to Heroku ==
+
+This app is deployed to https://runnertrack.herokuapp.com/ and the master on Github will be automatically
+redeployed to it on every push.
+
+To initially set this up:
+    (sign up for Heroku, and download the Heroku toolbelt)
+    heroku create
+Deploy with:
+    git push heroku master
+    heroku open
+
+Monitor with:
+    heroku ps
+    heroku logs
+
 == License ==
 
 Copyright (C) Inigo Surguy, 2015.
