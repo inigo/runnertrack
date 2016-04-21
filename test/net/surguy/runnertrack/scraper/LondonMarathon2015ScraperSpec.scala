@@ -14,7 +14,7 @@ class LondonMarathon2015ScraperSpec extends Specification {
   def parse(fileName: String): Runner = {
     val localUrl = new File("test/resources/"+fileName).toURI.toURL
     val browser = RaceScraper.browser()
-    val scraper = new LondonMarathon2015Scraper()
+    val scraper = new LondonMarathonScraper("2015")
     browser.navigate().to(localUrl)
     scraper.parse(browser)
   }

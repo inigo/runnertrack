@@ -51,7 +51,8 @@ object RaceLookup {
 
   private val races = Map(
     "manchester2015" -> Race("Greater Manchester Marathon 2015", new ManchesterMarathon2015Scraper(), Distances.Marathon)
-    , "london2015" -> Race("London Marathon 2015", new LondonMarathon2015Scraper(), Distances.Marathon)
+    , "london2015" -> Race("London Marathon 2015", new LondonMarathonScraper("2015"), Distances.Marathon)
+    , "london2016" -> Race("London Marathon 2016", new LondonMarathonScraper("2016"), Distances.Marathon)
     , "copenhagen2014" -> Race("Copenhagen 2014", new CopenhagenMarathonScraper(CopenhagenMarathonScraper.RACE_ID_2014), Distances.Marathon)
     , "copenhagen2015" -> Race("Copenhagen 2015", new CopenhagenMarathonScraper(CopenhagenMarathonScraper.RACE_ID_2015), Distances.Marathon)
   ).map((kv: (String, Race)) => (kv._1, wrapWithCache(kv._2)) )

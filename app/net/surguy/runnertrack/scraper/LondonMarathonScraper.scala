@@ -5,11 +5,11 @@ import org.openqa.selenium.{By, WebDriver}
 import scala.collection.JavaConversions._
 import net.surguy.runnertrack.TimeUtils._
 
-class LondonMarathon2015Scraper extends RaceScraper with WebDriverTools {
+class LondonMarathonScraper(year: String) extends RaceScraper with WebDriverTools {
   val distanceParser = new GenericDistanceParser()
 
   // Paula Radcliffe: 9999990F5ECC830000171324
-  val baseUrl = "http://results-2015.virginmoneylondonmarathon.com/2015/?content=detail&fpid=search&pid=search&idp=%s"
+  val baseUrl = s"http://results-$year.virginmoneylondonmarathon.com/$year/?content=detail&fpid=search&pid=search&idp=%s"
 
   override def scrape(browser: WebDriver)(runnerId: String) = {
     browser.navigate().to(baseUrl.format(runnerId))
