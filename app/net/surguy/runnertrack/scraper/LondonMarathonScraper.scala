@@ -37,3 +37,32 @@ class LondonMarathonScraper(year: String) extends RaceScraper with WebDriverTool
   }
 
 }
+
+class LondonMarathonRunnerFinder(year: String) extends RunnerFinder with WebDriverTools {
+  val baseUrl = s"http://results-$year.virginmoneylondonmarathon.com/$year/"
+
+  override def findRunnerId(browser:WebDriver)(raceNumber: String): Option[String] = {
+    openSearchResults(browser, raceNumber)
+    parse(browser)
+  }
+
+  private[scraper] def parse(browser: WebDriver): Option[String] = {
+    val link = browser.findElements(By.cssSelector(".list-table a")).headOption
+    link.map(_.getAttribute("href")).map(href => extractId(href) )
+  }
+
+  private def openSearchResults(browser: WebDriver, raceNumber: String): Unit = {
+    browser.navigate().to(baseUrl)
+    val raceNumberField = browser.findElement(By.id("search-start_no"))
+    raceNumberField.sendKeys(raceNumber)
+    raceNumberField.submit()
+  }
+
+  private[scraper] def extractId(href: String): String = {
+    // We want the "idp" part of the query string
+    // http://results-2015.virginmoneylondonmarathon.com/2015/?content=detail&fpid=search&pid=search&idp=9999990F5ECC830000171324&lang=EN_CAP&event=MAS&search%5Bstart_no%5D=25371&search%5Bsex%5D=%25&search%5Bnation%5D=%25&search_sort=name&search_event=MAS
+    val i = href.indexOf("idp=")
+    href.substring(i+4, href.indexOf("&", i))
+  }
+
+}

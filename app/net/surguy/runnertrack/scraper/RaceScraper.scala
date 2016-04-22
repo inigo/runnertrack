@@ -49,3 +49,7 @@ class GenericDistanceParser extends DistanceParser {
     }
   }
 }
+
+trait RunnerFinder {
+  def findRunnerId(browser:WebDriver)(raceNumber: String): Option[String]
+}
