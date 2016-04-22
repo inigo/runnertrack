@@ -41,3 +41,26 @@ class CachingScraper(delegate: RaceScraper, minRefreshTimeInMs: Long = 10000, ca
 
   override def cacheKey: String = delegate.cacheKey
 }
+
+/**
+  * Cache runner identifiers - much easier than caching runners, since they don't change.
+  */
+class CachingRunnerFinder(delegate: RunnerFinder) extends RunnerFinder {
+  private val cacheName = delegate.getClass.getCanonicalName + delegate.cacheKey
+  CacheManager.getInstance().addCacheIfAbsent(cacheName)
+
+  override def findRunnerId(browser: WebDriver)(raceNumber: String): Option[String] = {
+    val cache = CacheManager.getInstance().getCache(cacheName)
+    val cacheEntry = Option(cache.get(raceNumber))
+    cacheEntry match {
+      case Some(entry) =>
+        Some(entry.getObjectValue.asInstanceOf[String])
+      case None =>
+        val result = delegate.findRunnerId(browser)(raceNumber)
+        result.foreach(id => cache.put(new Element(raceNumber, id)) )
+        result
+    }
+  }
+
+  override def cacheKey: String = delegate.cacheKey
+}

@@ -54,8 +54,10 @@ class GenericDistanceParser extends DistanceParser {
 /** Convert a race number into the identifier needed for tracking that runner. */
 trait RunnerFinder {
   def findRunnerId(browser:WebDriver)(raceNumber: String): Option[String]
+  def cacheKey: String
 }
 
 class NoopRunnerFinder extends RunnerFinder {
-  override def findRunnerId(browser: WebDriver)(raceNumber: String): Option[String] = Some(raceNumber)
+  override def findRunnerId(browser: WebDriver)(raceNumber: String): Option[String] = None
+  def cacheKey = "noop"
 }

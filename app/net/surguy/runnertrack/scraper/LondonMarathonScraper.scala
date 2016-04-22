@@ -48,6 +48,8 @@ class LondonMarathonRunnerFinder(year: String) extends RunnerFinder with WebDriv
     parse(browser)
   }
 
+  override def cacheKey: String = "londonRunnerFinder"+year
+
   private[scraper] def parse(browser: WebDriver): Option[String] = {
     val link = browser.findElements(By.cssSelector(".list-table a")).headOption
     link.map(_.getAttribute("href")).map(href => extractId(href) )

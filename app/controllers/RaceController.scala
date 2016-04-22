@@ -65,7 +65,7 @@ object RaceLookup {
     , "copenhagen2015" -> Race("Copenhagen 2015", new CopenhagenMarathonScraper(CopenhagenMarathonScraper.RACE_ID_2015), Distances.Marathon, new NoopRunnerFinder())
   ).map((kv: (String, Race)) => (kv._1, wrapWithCache(kv._2)) )
 
-  private def wrapWithCache(r: Race) = r.copy(scraper = new CachingScraper(r.scraper))
+  private def wrapWithCache(r: Race) = r.copy(scraper = new CachingScraper(r.scraper), runnerFinder = new CachingRunnerFinder(r.runnerFinder))
 
   def lookupId(raceId: String): Race = races(raceId)
   def raceNames: Seq[(String, String)] = races.map((tuple: (String, Race)) => (tuple._1, tuple._2.name) ).toSeq
