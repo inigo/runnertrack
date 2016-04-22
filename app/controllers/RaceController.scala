@@ -41,6 +41,14 @@ object RaceController extends Controller {
     Ok(views.html.addRunners(raceId, raceName))
   }
 
+  def lookupRunners(raceId: String, raceNumbers: String) = Action { implicit request =>
+    val race = RaceLookup.lookupId(raceId)
+    val splitRaceNumbers = raceNumbers.split(",").toSeq
+    // Use the RunnerFinder to look up the runner - defaulting to the originally entered id if not found
+    val ids = splitRaceNumbers.map(id => race.runnerFinder.findRunnerId(RaceScraper.browser())(id).getOrElse(id))
+    Redirect(controllers.routes.RaceController.showRunners(raceId, ids.mkString(",")))
+  }
+
 }
 
 /**
@@ -50,11 +58,11 @@ object RaceLookup {
   val browser = RaceScraper.browser()
 
   private val races = Map(
-    "manchester2015" -> Race("Greater Manchester Marathon 2015", new ManchesterMarathon2015Scraper(), Distances.Marathon)
-    , "london2015" -> Race("London Marathon 2015", new LondonMarathonScraper("2015"), Distances.Marathon)
-    , "london2016" -> Race("London Marathon 2016", new LondonMarathonScraper("2016"), Distances.Marathon)
-    , "copenhagen2014" -> Race("Copenhagen 2014", new CopenhagenMarathonScraper(CopenhagenMarathonScraper.RACE_ID_2014), Distances.Marathon)
-    , "copenhagen2015" -> Race("Copenhagen 2015", new CopenhagenMarathonScraper(CopenhagenMarathonScraper.RACE_ID_2015), Distances.Marathon)
+    "manchester2015" -> Race("Greater Manchester Marathon 2015", new ManchesterMarathon2015Scraper(), Distances.Marathon, new NoopRunnerFinder())
+    , "london2015" -> Race("London Marathon 2015", new LondonMarathonScraper("2015"), Distances.Marathon, new LondonMarathonRunnerFinder("2015"))
+    , "london2016" -> Race("London Marathon 2016", new LondonMarathonScraper("2016"), Distances.Marathon, new LondonMarathonRunnerFinder("2016"))
+    , "copenhagen2014" -> Race("Copenhagen 2014", new CopenhagenMarathonScraper(CopenhagenMarathonScraper.RACE_ID_2014), Distances.Marathon, new NoopRunnerFinder())
+    , "copenhagen2015" -> Race("Copenhagen 2015", new CopenhagenMarathonScraper(CopenhagenMarathonScraper.RACE_ID_2015), Distances.Marathon, new NoopRunnerFinder())
   ).map((kv: (String, Race)) => (kv._1, wrapWithCache(kv._2)) )
 
   private def wrapWithCache(r: Race) = r.copy(scraper = new CachingScraper(r.scraper))

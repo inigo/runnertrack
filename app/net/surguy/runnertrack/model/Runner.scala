@@ -2,9 +2,9 @@ package net.surguy.runnertrack.model
 
 import java.time.{Duration, LocalTime}
 
-import net.surguy.runnertrack.scraper.RaceScraper
+import net.surguy.runnertrack.scraper.{RaceScraper, RunnerFinder}
 
-case class Race(name: String, scraper: RaceScraper, distance: Distance)
+case class Race(name: String, scraper: RaceScraper, distance: Distance, runnerFinder: RunnerFinder)
 
 case class Runner(name: String, splits: Seq[Split], club: String,
                    startTime: Option[LocalTime], finish: Option[Finish])
