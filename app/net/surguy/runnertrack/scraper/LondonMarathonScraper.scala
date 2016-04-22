@@ -16,6 +16,8 @@ class LondonMarathonScraper(year: String) extends RaceScraper with WebDriverTool
     parse(browser)
   }
 
+  override def cacheKey: String = "london"+year
+
   def parse(implicit browser: WebDriver): Runner = {
     val name = $("td.f-__fullname")
     val club = $("td.f-club")

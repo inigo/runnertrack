@@ -33,6 +33,8 @@ class CopenhagenMarathonScraper(raceId: String) extends RaceScraper with WebDriv
     }
   }
 
+  override def cacheKey: String = "copenhagen"+raceId
+
   private[scraper] def extractHtml(source: String): String = {
     val sourceStart = source.indexOf("innerHTML='") + "innerHTML='".length
     val sourceEnd = source.lastIndexOf("';")

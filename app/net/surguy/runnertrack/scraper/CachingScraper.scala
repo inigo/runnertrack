@@ -12,7 +12,7 @@ import scala.util.Try
  */
 class CachingScraper(delegate: RaceScraper, minRefreshTimeInMs: Long = 10000, cacheNameSuffix: String = "") extends RaceScraper {
   // The tests sometimes fail if just using the class name as the key - because the mock delegates sometimes share the same name
-  private val cacheName = delegate.getClass.getCanonicalName + cacheNameSuffix
+  private val cacheName = delegate.getClass.getCanonicalName + delegate.cacheKey + cacheNameSuffix
   CacheManager.getInstance().addCacheIfAbsent(cacheName)
 
   override def scrape(browser: WebDriver)(runnerId: String): Runner = delegate.scrape(browser)(runnerId)
@@ -39,4 +39,5 @@ class CachingScraper(delegate: RaceScraper, minRefreshTimeInMs: Long = 10000, ca
     }
   }
 
+  override def cacheKey: String = delegate.cacheKey
 }

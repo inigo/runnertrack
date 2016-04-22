@@ -12,6 +12,7 @@ import scala.util.Try
 abstract class RaceScraper {
   private[scraper] def scrape(browser: WebDriver)(runnerId: String): Runner
   def tryScrape(browser: WebDriver)(runnerId: String): Option[Runner] = Try(scrape(browser)(runnerId)).toOption
+  def cacheKey: String
 }
 
 trait WebDriverTools {

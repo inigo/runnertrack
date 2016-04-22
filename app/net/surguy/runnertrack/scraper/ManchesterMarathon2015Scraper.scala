@@ -11,6 +11,8 @@ class ManchesterMarathon2015Scraper extends RaceScraper with WebDriverTools {
   // Me: 513432
   val baseUrl = "http://www.chiprace.co.uk/MyResults.aspx?CId=38&RId=932&EId=1&AId=%s"
 
+  override def cacheKey: String = "manchester"
+
   override def scrape(browser: WebDriver)(runnerId: String) = {
     browser.navigate().to(baseUrl.format(runnerId))
     parse(browser)
