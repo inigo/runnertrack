@@ -62,6 +62,7 @@ object RaceLookup {
     , "london2015" -> Race("London Marathon 2015", new LondonMarathonScraper("2015"), Distances.Marathon, new LondonMarathonRunnerFinder("2015"))
     , "london2016" -> Race("London Marathon 2016", new LondonMarathonScraper("2016"), Distances.Marathon, new LondonMarathonRunnerFinder("2016"))
     , "london2017" -> Race("London Marathon 2017", new LondonMarathonScraper("2017"), Distances.Marathon, new LondonMarathonRunnerFinder("2017"))
+    , "london2018" -> Race("London Marathon 2018", new LondonMarathonScraper("2018"), Distances.Marathon, new LondonMarathonRunnerFinder("2018"))
     , "copenhagen2014" -> Race("Copenhagen 2014", new CopenhagenMarathonScraper(CopenhagenMarathonScraper.RACE_ID_2014), Distances.Marathon, new NoopRunnerFinder())
     , "copenhagen2015" -> Race("Copenhagen 2015", new CopenhagenMarathonScraper(CopenhagenMarathonScraper.RACE_ID_2015), Distances.Marathon, new NoopRunnerFinder())
   ).map((kv: (String, Race)) => (kv._1, wrapWithCache(kv._2)) )
